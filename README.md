@@ -2,12 +2,19 @@
  ImgBB API Wrapper
 
 
+```Pascal
+function Upload(const FileName: string; out Response: TImgBBUploadResponse): Boolean; overload;
+function Upload(const Stream: TStream; const FileName: string; out Response: TImgBBUploadResponse): Boolean; overload;
+function Upload(const FileName: string; out ImageUrl: string): Boolean; overload;
+function Upload(const Stream: TStream; const FileName: string; out ImageUrl: string): Boolean; overload;
+```
+
 # Image url only
 ```Pascal
   ImgBB := TImgBB.Create(Token);
   try
     var ImgUrl: string;
-    if ImgBB.Upload(Edit1.Text, ImgUrl) then
+    if ImgBB.Upload(EditFileName.Text, ImgUrl) then
       Memo1.Lines.Add(ImgUrl)
     else
       Memo1.Lines.Add('error');
@@ -21,7 +28,7 @@
   ImgBB := TImgBB.Create(Token);
   try
     var Response: TImgBBUploadResponse;
-    if ImgBB.Upload(Edit1.Text, Response) then
+    if ImgBB.Upload(EditFileName.Text, Response) then
     begin
       if Assigned(Response) then
       try
