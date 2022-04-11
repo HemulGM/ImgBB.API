@@ -2,6 +2,8 @@
 
 Загрузка картинок на хостинг https://imgbb.com/
 
+Получить токен: https://api.imgbb.com/
+
  ImgBB API Wrapper
 
 
