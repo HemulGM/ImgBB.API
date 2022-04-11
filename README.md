@@ -1,4 +1,7 @@
 # ImgBB.API
+
+Загрузка картинок на хостинг https://imgbb.com/
+
  ImgBB API Wrapper
 
 
