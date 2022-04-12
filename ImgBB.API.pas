@@ -9,6 +9,10 @@ uses
 type
   EImgBBWrapper = class(Exception);
 
+  {$IF CompilerVersion < 34.0}
+  TSendDataCallback = reference to procedure(const Sender: TObject; AContentLength: Int64; AWriteCount: Int64; var AAbort: Boolean);
+  {$ENDIF}
+
   TImgBBUploadResponse = class
   private
     type
@@ -88,14 +92,14 @@ type
 
   IImgBB = interface
     ['{1C9FA631-5F45-4853-88CA-47525DB9E57C}']
-    function Upload(const URI: TURI; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-    function Upload(const URI: TURI; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-    function Upload(const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-    function Upload(const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-    function Upload(const Stream: TStream; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-    function Upload(const Stream: TStream; const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-    function Upload(const Base64: TStringList; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-    function Upload(const Base64: TStringList; const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+    function Upload(const URI: TURI; out Response: TImgBBUploadResponse; CallBack: TSendDataCallback = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+    function Upload(const URI: TURI; out ImageUrl: string; CallBack: TSendDataCallback = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+    function Upload(const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataCallback = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+    function Upload(const FileName: string; out ImageUrl: string; CallBack: TSendDataCallback = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+    function Upload(const Stream: TStream; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataCallback = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+    function Upload(const Stream: TStream; const FileName: string; out ImageUrl: string; CallBack: TSendDataCallback = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+    function Upload(const Base64: TStringList; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataCallback = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+    function Upload(const Base64: TStringList; const FileName: string; out ImageUrl: string; CallBack: TSendDataCallback = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
   end;
 
   TImgBB = class(TInterfacedObject, IImgBB)
@@ -104,40 +108,40 @@ type
   private
     FKey: string;
     FAPIUrl: string;
-    function Upload(Body: TMultipartFormData; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent; const Name: string; Expiration: Integer): Boolean; overload;
+    function Upload(Body: TMultipartFormData; out Response: TImgBBUploadResponse; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean; overload;
   public
     /// <summary>
     /// Image Upload from file
     /// </summary>
-    function Upload(const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+    function Upload(const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataCallback = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
     /// <summary>
     /// Image Upload from file
     /// </summary>
-    function Upload(const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+    function Upload(const FileName: string; out ImageUrl: string; CallBack: TSendDataCallback = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
     /// <summary>
     /// Image Upload from stream
     /// </summary>
-    function Upload(const Stream: TStream; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+    function Upload(const Stream: TStream; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataCallback = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
     /// <summary>
     /// Image Upload from stream
     /// </summary>
-    function Upload(const Stream: TStream; const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+    function Upload(const Stream: TStream; const FileName: string; out ImageUrl: string; CallBack: TSendDataCallback = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
     /// <summary>
     /// Image Upload from url
     /// </summary>
-    function Upload(const URI: TURI; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent; const Name: string; Expiration: Integer): Boolean; overload;
+    function Upload(const URI: TURI; out Response: TImgBBUploadResponse; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean; overload;
     /// <summary>
     /// Image Upload from url
     /// </summary>
-    function Upload(const URI: TURI; out ImageUrl: string; CallBack: TSendDataEvent; const Name: string; Expiration: Integer): Boolean; overload;
+    function Upload(const URI: TURI; out ImageUrl: string; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean; overload;
     /// <summary>
     /// Image Upload from base64
     /// </summary>
-    function Upload(const Base64: TStringList; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+    function Upload(const Base64: TStringList; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataCallback = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
     /// <summary>
     /// Image Upload from base64
     /// </summary>
-    function Upload(const Base64: TStringList; const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+    function Upload(const Base64: TStringList; const FileName: string; out ImageUrl: string; CallBack: TSendDataCallback = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
     /// <summary>
     /// The API key
     /// </summary>
@@ -161,7 +165,7 @@ begin
   FAPIUrl := AAPIUrl;
 end;
 
-function TImgBB.Upload(Body: TMultipartFormData; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent; const Name: string; Expiration: Integer): Boolean;
+function TImgBB.Upload(Body: TMultipartFormData; out Response: TImgBBUploadResponse; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean;
 var
   URI: TURI;
   Client: THTTPClient;
@@ -171,7 +175,9 @@ begin
   Client := THTTPClient.Create;
   ResponseStream := TStringStream.Create;
   try
-    Client.OnSendData := CallBack;
+    {$IF CompilerVersion >= 34.0}
+    Client.SendDataCallback := CallBack;
+    {$ENDIF}
     // Uri construct
     URI := TURI.Create(UrlUpload);
     // Params
@@ -207,7 +213,7 @@ begin
   end;
 end;
 
-function TImgBB.Upload(const Stream: TStream; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent; const Name: string; Expiration: Integer): Boolean;
+function TImgBB.Upload(const Stream: TStream; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean;
 var
   Body: TMultipartFormData;
 begin
@@ -221,7 +227,7 @@ begin
   end;
 end;
 
-function TImgBB.Upload(const URI: TURI; out ImageUrl: string; CallBack: TSendDataEvent; const Name: string; Expiration: Integer): Boolean;
+function TImgBB.Upload(const URI: TURI; out ImageUrl: string; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean;
 var
   Response: TImgBBUploadResponse;
 begin
@@ -234,7 +240,7 @@ begin
   end;
 end;
 
-function TImgBB.Upload(const URI: TURI; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent; const Name: string; Expiration: Integer): Boolean;
+function TImgBB.Upload(const URI: TURI; out Response: TImgBBUploadResponse; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean;
 var
   Body: TMultipartFormData;
 begin
@@ -248,7 +254,7 @@ begin
   end;
 end;
 
-function TImgBB.Upload(const Base64: TStringList; const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent; const Name: string; Expiration: Integer): Boolean;
+function TImgBB.Upload(const Base64: TStringList; const FileName: string; out ImageUrl: string; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean;
 var
   Response: TImgBBUploadResponse;
 begin
@@ -261,7 +267,7 @@ begin
   end;
 end;
 
-function TImgBB.Upload(const Base64: TStringList; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent; const Name: string; Expiration: Integer): Boolean;
+function TImgBB.Upload(const Base64: TStringList; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean;
 var
   Body: TMultipartFormData;
 begin
@@ -275,7 +281,7 @@ begin
   end;
 end;
 
-function TImgBB.Upload(const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent; const Name: string; Expiration: Integer): Boolean;
+function TImgBB.Upload(const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean;
 var
   FileStream: TFileStream;
 begin
@@ -287,7 +293,7 @@ begin
   end;
 end;
 
-function TImgBB.Upload(const Stream: TStream; const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent; const Name: string; Expiration: Integer): Boolean;
+function TImgBB.Upload(const Stream: TStream; const FileName: string; out ImageUrl: string; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean;
 var
   Response: TImgBBUploadResponse;
 begin
@@ -300,7 +306,7 @@ begin
   end;
 end;
 
-function TImgBB.Upload(const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent; const Name: string; Expiration: Integer): Boolean;
+function TImgBB.Upload(const FileName: string; out ImageUrl: string; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean;
 var
   Response: TImgBBUploadResponse;
 begin
