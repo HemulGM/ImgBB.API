@@ -15,6 +15,5 @@ begin
     Writeln(ImgUrl)
   else
     Writeln('Error');
-  ImgBB.Upload(
   readln;
 end.
