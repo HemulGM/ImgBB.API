@@ -105,7 +105,8 @@ type
     FKey: string;
     FAPIUrl: string;
     function Upload(Body: TMultipartFormData; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent; const Name: string; Expiration: Integer): Boolean; overload;
-  public    /// <summary>
+  public
+    /// <summary>
     /// Image Upload from file
     /// </summary>
     function Upload(const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
@@ -225,9 +226,9 @@ var
   Response: TImgBBUploadResponse;
 begin
   Result := Upload(URI, Response, CallBack, Name, Expiration);
-  if Assigned(Response) then
   try
-    ImageUrl := Response.Data.Url;
+    if Assigned(Response.Data) then
+      ImageUrl := Response.Data.Url;
   finally
     Response.Free;
   end;
@@ -252,9 +253,9 @@ var
   Response: TImgBBUploadResponse;
 begin
   Result := Upload(Base64, FileName, Response, CallBack, Name, Expiration);
-  if Assigned(Response) then
   try
-    ImageUrl := Response.Data.Url;
+    if Assigned(Response.Data) then
+      ImageUrl := Response.Data.Url;
   finally
     Response.Free;
   end;
@@ -291,9 +292,9 @@ var
   Response: TImgBBUploadResponse;
 begin
   Result := Upload(Stream, FileName, Response, CallBack, Name, Expiration);
-  if Assigned(Response) then
   try
-    ImageUrl := Response.Data.Url;
+    if Assigned(Response.Data) then
+      ImageUrl := Response.Data.Url;
   finally
     Response.Free;
   end;
@@ -304,9 +305,9 @@ var
   Response: TImgBBUploadResponse;
 begin
   Result := Upload(FileName, Response, CallBack, Name, Expiration);
-  if Assigned(Response) then
   try
-    ImageUrl := Response.Data.Url;
+    if Assigned(Response.Data) then
+      ImageUrl := Response.Data.Url;
   finally
     Response.Free;
   end;
