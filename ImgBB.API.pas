@@ -83,34 +83,61 @@ type
     destructor Destroy; override;
   end;
 
-  TImgBB = class
+  IImgBB = interface
+    ['{1C9FA631-5F45-4853-88CA-47525DB9E57C}']
+    function Upload(const FileName: string; Name: string = ''; Expiration: Integer = 60): TImgBBUploadResponse; overload;
+    function Upload(const Stream: TStream; const FileName: string; Name: string = ''; Expiration: Integer = 60): TImgBBUploadResponse; overload;
+    function Upload(const FileName: string; Name: string = ''; Expiration: Integer = 60): string; overload;
+    function Upload(const Stream: TStream; const FileName: string; Name: string = ''; Expiration: Integer = 60): string; overload;
+  end;
+
+  TImgBB = class(TInterfacedObject, IImgBB)
     const
       UrlUpload = 'https://api.imgbb.com/1/upload';
   private
     FKey: string;
+    FAPIUrl: string;
   public
-    function Upload(const FileName: string; out Response: TImgBBUploadResponse): Boolean; overload;
-    function Upload(const Stream: TStream; const FileName: string; out Response: TImgBBUploadResponse): Boolean; overload;
-    function Upload(const FileName: string; out ImageUrl: string): Boolean; overload;
-    function Upload(const Stream: TStream; const FileName: string; out ImageUrl: string): Boolean; overload;
+    /// <summary>
+    /// Image Upload from file
+    /// </summary>
+    function Upload(const FileName: string; Name: string = ''; Expiration: Integer = 60): TImgBBUploadResponse; overload;
+    /// <summary>
+    /// Image Upload from file
+    /// </summary>
+    function Upload(const FileName: string; Name: string = ''; Expiration: Integer = 60): string; overload;
+    /// <summary>
+    /// Image Upload from stream
+    /// </summary>
+    function Upload(const Stream: TStream; const FileName: string; Name: string = ''; Expiration: Integer = 60): TImgBBUploadResponse; overload;
+    /// <summary>
+    /// Image Upload from stream
+    /// </summary>
+    function Upload(const Stream: TStream; const FileName: string; Name: string = ''; Expiration: Integer = 60): string; overload;
+    /// <summary>
+    /// The API key
+    /// </summary>
     property Key: string read FKey write FKey;
-    constructor Create(const AKey: string);
+    /// <param name="AKey: string">The API key. Get key api from https://api.imgbb.com</param>
+    /// <param name="AAPIUrl: string">API url - default UrlUpload const</param>
+    constructor Create(const AKey: string; const AAPIUrl: string = UrlUpload);
   end;
 
 implementation
 
 uses
-  REST.Json, System.Net.HttpClient, System.Net.Mime;
+  REST.Json, System.Net.HttpClient, System.Net.Mime, System.Net.URLClient;
 
 { TImgBB }
 
-constructor TImgBB.Create(const AKey: string);
+constructor TImgBB.Create(const AKey: string; const AAPIUrl: string);
 begin
   inherited Create;
   FKey := AKey;
+  FAPIUrl := AAPIUrl;
 end;
 
-function TImgBB.Upload(const Stream: TStream; const FileName: string; out Response: TImgBBUploadResponse): Boolean;
+function TImgBB.Upload(const Stream: TStream; const FileName: string; const Name: string; Expiration: Integer): TImgBBUploadResponse;
 var
   Client: THTTPClient;
   Body: TMultipartFormData;
@@ -121,17 +148,25 @@ begin
   Body := TMultipartFormData.Create;
   ResponseStream := TStringStream.Create;
   try
+    // Body - file
     Body.AddStream('image', Stream, FileName);
-    Result := Client.Post(UrlUpload + '?key=' + FKey, Body, ResponseStream).StatusCode = 200;
+    // Uri construct
+    var Uri := TURI.Create(UrlUpload);
+    Uri.AddParameter('key', FKey);
+    if not Name.IsEmpty then
+      Uri.AddParameter('name', Name);
+    if Expiration > 60 then
+      Uri.AddParameter('expiration', Expiration.ToString);
+    // Execute
+    Result := Client.Post(Uri.ToString, Body, ResponseStream).StatusCode = 200;
+    // Parse
     if ResponseStream.Size > 0 then
     begin
       ResponseStream.Position := 0;
-      try
-        Response := TJson.JsonToObject<TImgBBUploadResponse>(ResponseStream.DataString);
-      except
-        Result := False;
-      end;
-    end;
+      Response := TJson.JsonToObject<TImgBBUploadResponse>(ResponseStream.DataString);
+    end
+    else
+      raise Exception.Create('Response is empty');
   finally
     ResponseStream.Free;
     Body.Free;
@@ -139,23 +174,23 @@ begin
   end;
 end;
 
-function TImgBB.Upload(const FileName: string; out Response: TImgBBUploadResponse): Boolean;
+function TImgBB.Upload(const FileName: string; const Name: string; Expiration: Integer): TImgBBUploadResponse;
 var
   FileStream: TFileStream;
 begin
   FileStream := TFileStream.Create(FileName, fmShareDenyWrite);
   try
-    Result := Upload(FileStream, FileName, Response);
+    Result := Upload(FileStream, FileName, Response, Name, Expiration);
   finally
     FileStream.Free;
   end;
 end;
 
-function TImgBB.Upload(const Stream: TStream; const FileName: string; out ImageUrl: string): Boolean;
+function TImgBB.Upload(const Stream: TStream; const FileName: string; const Name: string; Expiration: Integer): string;
 var
   Response: TImgBBUploadResponse;
 begin
-  Result := Upload(Stream, FileName, Response);
+  Result := Upload(Stream, FileName, Response, Name, Expiration);
   if Assigned(Response) then
   try
     if Result then
@@ -165,11 +200,11 @@ begin
   end;
 end;
 
-function TImgBB.Upload(const FileName: string; out ImageUrl: string): Boolean;
+function TImgBB.Upload(const FileName: string; const Name: string; Expiration: Integer): string;
 var
   Response: TImgBBUploadResponse;
 begin
-  Result := Upload(FileName, Response);
+  Result := Upload(FileName, Response, Name, Expiration);
   if Assigned(Response) then
   try
     if Result then
