@@ -7,6 +7,8 @@ uses
   System.Net.Mime;
 
 type
+  EImgBBWrapper = class(Exception);
+
   TImgBBUploadResponse = class
   private
     type
@@ -185,19 +187,19 @@ begin
       ResponseStream.Position := 0;
       Response := TJson.JsonToObject<TImgBBUploadResponse>(ResponseStream.DataString);
       if not Assigned(Response) then
-        raise Exception.Create('Json is empty');
+        raise EImgBBWrapper.Create('Json is empty');
       if not Result then
       try
         if Assigned(Response.Error) then
-          raise Exception.Create('ImgBB error: ' + Response.Error.Message + ' (' + Response.Error.Code.ToString + ')')
+          raise EImgBBWrapper.Create('ImgBB error: ' + Response.Error.Message + ' (' + Response.Error.Code.ToString + ')')
         else
-          raise Exception.Create('Unknown error');
+          raise EImgBBWrapper.Create('Unknown error');
       finally
         Response.Free;
       end;
     end
     else
-      raise Exception.Create('Response is empty');
+      raise EImgBBWrapper.Create('Response is empty');
   finally
     ResponseStream.Free;
     Client.Free;
