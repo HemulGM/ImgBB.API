@@ -8,14 +8,14 @@
 
 
 ```Pascal
-    function Upload(const URI: TURI; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-    function Upload(const URI: TURI; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-    function Upload(const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-    function Upload(const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-    function Upload(const Stream: TStream; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-    function Upload(const Stream: TStream; const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-    function Upload(const Base64: TStringList; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-    function Upload(const Base64: TStringList; const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+function Upload(const URI: TURI; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+function Upload(const URI: TURI; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+function Upload(const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+function Upload(const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+function Upload(const Stream: TStream; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+function Upload(const Stream: TStream; const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+function Upload(const Base64: TStringList; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+function Upload(const Base64: TStringList; const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
 ```
 
 # Image url only
