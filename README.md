@@ -23,9 +23,7 @@
   ImgBB: IImgBB := TImgBB.Create(Token);
   var ImgUrl: string;
   if ImgBB.Upload(EditFileName.Text, ImgUrl) then
-    Memo1.Lines.Add(ImgUrl)
-  else
-    Memo1.Lines.Add('error');
+    Memo1.Lines.Add(ImgUrl);
 ```
 
 # Full response
