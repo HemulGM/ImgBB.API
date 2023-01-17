@@ -175,6 +175,7 @@ begin
   Client := THTTPClient.Create;
   ResponseStream := TStringStream.Create;
   try
+    // Callback for Delphi > 10.3 (HTTPClient not have SendDataCallback event)
     {$IF CompilerVersion >= 34.0}
     Client.SendDataCallback := CallBack;
     {$ENDIF}
@@ -219,24 +220,11 @@ var
 begin
   Body := TMultipartFormData.Create;
   try
-    // Body - file
+    // Body - stream
     Body.AddStream('image', Stream, FileName);
     Result := Upload(Body, Response, CallBack, Name, Expiration);
   finally
     Body.Free;
-  end;
-end;
-
-function TImgBB.Upload(const URI: TURI; out ImageUrl: string; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean;
-var
-  Response: TImgBBUploadResponse;
-begin
-  Result := Upload(URI, Response, CallBack, Name, Expiration);
-  try
-    if Assigned(Response.Data) then
-      ImageUrl := Response.Data.Url;
-  finally
-    Response.Free;
   end;
 end;
 
@@ -251,19 +239,6 @@ begin
     Result := Upload(Body, Response, CallBack, Name, Expiration);
   finally
     Body.Free;
-  end;
-end;
-
-function TImgBB.Upload(const Base64: TStringList; const FileName: string; out ImageUrl: string; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean;
-var
-  Response: TImgBBUploadResponse;
-begin
-  Result := Upload(Base64, FileName, Response, CallBack, Name, Expiration);
-  try
-    if Assigned(Response.Data) then
-      ImageUrl := Response.Data.Url;
-  finally
-    Response.Free;
   end;
 end;
 
@@ -283,13 +258,41 @@ end;
 
 function TImgBB.Upload(const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean;
 var
-  FileStream: TFileStream;
+  Body: TMultipartFormData;
 begin
-  FileStream := TFileStream.Create(FileName, fmShareDenyWrite);
+  Body := TMultipartFormData.Create;
   try
-    Result := Upload(FileStream, FileName, Response, CallBack, Name, Expiration);
+    // Body - file
+    Body.AddFile('image', FileName);
+    Result := Upload(Body, Response, CallBack, Name, Expiration);
   finally
-    FileStream.Free;
+    Body.Free;
+  end;
+end;
+
+function TImgBB.Upload(const URI: TURI; out ImageUrl: string; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean;
+var
+  Response: TImgBBUploadResponse;
+begin
+  Result := Upload(URI, Response, CallBack, Name, Expiration);
+  try
+    if Assigned(Response.Data) then
+      ImageUrl := Response.Data.Url;
+  finally
+    Response.Free;
+  end;
+end;
+
+function TImgBB.Upload(const Base64: TStringList; const FileName: string; out ImageUrl: string; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): Boolean;
+var
+  Response: TImgBBUploadResponse;
+begin
+  Result := Upload(Base64, FileName, Response, CallBack, Name, Expiration);
+  try
+    if Assigned(Response.Data) then
+      ImageUrl := Response.Data.Url;
+  finally
+    Response.Free;
   end;
 end;
 
