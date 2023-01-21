@@ -10,10 +10,10 @@ var
 begin
   ReportMemoryLeaksOnShutdown := True;
   var ImgBB: IImgBB := TImgBB.Create(Token);
-  var ImgUrl: string;
-  if ImgBB.Upload('..\..\sample.png', ImgUrl, nil, 'sample', 1000) then
-    Writeln(ImgUrl)
-  else
+  try
+    Writeln(ImgBB.UploadGetUrl('..\..\sample.png', nil, 'sample', 1000));
+  except
     Writeln('Error');
+  end;
   readln;
 end.
