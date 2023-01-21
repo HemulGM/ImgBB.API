@@ -8,32 +8,29 @@
 
 
 ```Pascal
-function Upload(const URI: TURI; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-function Upload(const URI: TURI; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-function Upload(const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-function Upload(const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-function Upload(const Stream: TStream; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-function Upload(const Stream: TStream; const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-function Upload(const Base64: TStringList; const FileName: string; out Response: TImgBBUploadResponse; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
-function Upload(const Base64: TStringList; const FileName: string; out ImageUrl: string; CallBack: TSendDataEvent = nil; const Name: string = ''; Expiration: Integer = 60): Boolean; overload;
+function Upload(FileName, CallBack, Name, Expiration): TImgBBUploadResponse;
+function Upload(Stream, FileName, CallBack, Name, Expiration): TImgBBUploadResponse;
+function Upload(URI, CallBack, Name, Expiration): TImgBBUploadResponse;
+function Upload(Base64, FileName, CallBack, Name, Expiration): TImgBBUploadResponse;
+
+function UploadGetUrl(FileName, CallBack, Name, Expiration): string;
+function UploadGetUrl(Stream, FileName, CallBack, Name; Expiration): string;
+function UploadGetUrl(URI, CallBack, Name, Expiration): string;
+function UploadGetUrl(Base64, FileName, CallBack, Name; Expiration): string;
 ```
 
-# Image url only
+# Get image url only from file and single call
 ```Pascal
-  ImgBB: IImgBB := TImgBB.Create(Token);
-  var ImgUrl: string;
-  if ImgBB.Upload(EditFileName.Text, ImgUrl) then
-    Memo1.Lines.Add(ImgUrl);
+Memo1.Lines.Add(ImgBBAPI(Token).Upload(EditFileName.Text));
 ```
 
-# Full response
+# Get full response from base64 image
 ```Pascal
-  ImgBB: IImgBB := TImgBB.Create(Token);
-  var Response: TImgBBUploadResponse;
-  if ImgBB.Upload(EditFileName.Text, Response) then
-  try
-    Memo1.Lines.Add(Response.Data.Url)
-  finally
-    Response.Free;
-  end;
+var ImgBB := TImgBB.Instance(Token);
+var Response := ImgBB.Upload(Base64Strings) then
+try
+  Memo1.Lines.Add(Response.Data.Url);
+finally
+  Response.Free;
+end;
 ```
