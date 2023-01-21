@@ -176,12 +176,20 @@ type
     /// <param name="AKey: string">The API key. Get key api from api.imgbb.com</param>
     /// <param name="AAPIUrl: string">API url - default UrlUpload const</param>
     constructor Create(const AKey: string; const AAPIUrl: string = UrlUpload);
+    class function Instance(const AKey: string; const AAPIUrl: string = UrlUpload): IImgBB;
   end;
+
+function ImgBBAPI(const AKey: string; const AAPIUrl: string = TImgBB.UrlUpload): IImgBB;
 
 implementation
 
 uses
   REST.Json;
+
+function ImgBBAPI(const AKey: string; const AAPIUrl: string): IImgBB;
+begin
+  Result := TImgBB.Instance(AKey, AAPIUrl);
+end;
 
 { TImgBB }
 
@@ -292,6 +300,11 @@ begin
   finally
     Response.Free;
   end;
+end;
+
+class function TImgBB.Instance(const AKey: string; const AAPIUrl: string = UrlUpload): IImgBB;
+begin
+  Result := TImgBB.Create(AKey, AAPIUrl);
 end;
 
 function TImgBB.Upload(const Base64: TStringList; const FileName: string; CallBack: TSendDataCallback; const Name: string; Expiration: Integer): TImgBBUploadResponse;
