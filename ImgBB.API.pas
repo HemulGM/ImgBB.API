@@ -179,6 +179,9 @@ type
     class function Instance(const AKey: string; const AAPIUrl: string = UrlUpload): IImgBB;
   end;
 
+/// <summary>
+/// Create IImgBB directly
+/// </summary>
 function ImgBBAPI(const AKey: string; const AAPIUrl: string = TImgBB.UrlUpload): IImgBB;
 
 implementation

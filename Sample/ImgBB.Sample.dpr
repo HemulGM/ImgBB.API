@@ -1,7 +1,6 @@
 ﻿program ImgBB.Sample;
 
 uses
-  System.SysUtils,
   ImgBB.API in '..\ImgBB.API.pas';
 
 var
